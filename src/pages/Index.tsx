@@ -232,7 +232,7 @@ export default function Index() {
                   #{result.app_id}
                 </span>
                 <a
-                  href={result.steam_url}
+                  href={`https://store.steampowered.com/app/${result.app_id}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-[#333] hover:text-[#4ade80] transition-colors"
