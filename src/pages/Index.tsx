@@ -15,7 +15,6 @@ interface ParseResult {
   app_id: string;
   game_title: string;
   contacts: Contacts;
-  steam_url: string;
   error?: string;
 }
 
@@ -342,7 +341,6 @@ export default function Index() {
                 <Icon name="Info" size={16} className="text-[#444] mt-0.5 shrink-0" />
                 <p className="text-[#444] text-sm leading-relaxed">
                   Контактные данные не найдены. Возможно, издатель не указал их на странице поддержки.
-                  {' '}<a href={result.steam_url} target="_blank" rel="noopener noreferrer" className="text-[#4ade80] hover:underline">Проверить вручную →</a>
                 </p>
               </div>
             )}
