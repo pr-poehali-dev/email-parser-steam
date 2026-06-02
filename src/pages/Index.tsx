@@ -139,6 +139,12 @@ export default function Index() {
             <p className="text-[#4a4a4a] text-sm">Введите код доступа для продолжения</p>
           </div>
 
+          <div className="mb-4 px-4 py-3 rounded-lg border border-[#1c1c1c] bg-[#101010]">
+            <p className="text-[#555] text-sm leading-relaxed">
+              Данный сайт позволяет узнать контакты любого издателя в Steam, такие как e-mail, а также соцсети и сайт (если они им указаны). Главное чтобы игра продавалась в магазине Steam. Для удалённых из магазина игр такие данные также удаляются.
+            </p>
+          </div>
+
           <div className="rounded-xl border border-[#1c1c1c] bg-[#101010] overflow-hidden">
             <div className="flex items-center border-b border-[#1c1c1c]">
               <span className="pl-4 pr-2">
