@@ -98,6 +98,23 @@ export default function Index() {
 
       <div className="relative z-10 w-full max-w-[520px]">
 
+        {/* Notice */}
+        <div className="mb-8 rounded-xl border border-[#1c1c1c] bg-[#101010] px-5 py-4 space-y-3 animate-fade-in">
+          <div className="flex items-center gap-2">
+            <Icon name="Info" size={14} className="text-[#4ade80] shrink-0" />
+            <span className="font-mono text-[10px] text-[#4ade80] uppercase tracking-widest">Важно знать</span>
+          </div>
+          <p className="text-[#555] text-sm leading-relaxed">
+            Прямую форму логина Steam (логин + пароль) сделать нельзя — Steam не предоставляет такой API для сторонних сайтов.
+          </p>
+          <p className="text-[#555] text-sm leading-relaxed">
+            Но есть <span className="text-[#888]">Steam OpenID</span> — официальный способ входа через Steam, как кнопка «Войти через Steam» на многих игровых сайтах. Пользователь нажимает кнопку → его перебрасывает на страницу Steam → он входит → Steam возвращает его обратно на наш сайт уже авторизованным.
+          </p>
+          <p className="text-[#555] text-sm leading-relaxed">
+            Одна проблема: <span className="text-[#888]">OpenID даёт нам только SteamID пользователя</span>, но не куки сессии <code className="font-mono text-xs text-[#4ade80]/70 bg-[#4ade80]/5 px-1.5 py-0.5 rounded">steamLoginSecure</code>, которые нужны для доступа к контактам издателей — это закрытая часть Steam, и OpenID туда не даёт доступ.
+          </p>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-10 animate-fade-in">
           <div className="inline-flex items-center gap-2 mb-5 px-3 py-1.5 rounded-full border border-[#4ade80]/20 bg-[#4ade80]/5">
