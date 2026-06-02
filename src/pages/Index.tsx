@@ -113,6 +113,18 @@ export default function Index() {
           <p className="text-[#555] text-sm leading-relaxed">
             Одна проблема: <span className="text-[#888]">OpenID даёт нам только SteamID пользователя</span>, но не куки сессии <code className="font-mono text-xs text-[#4ade80]/70 bg-[#4ade80]/5 px-1.5 py-0.5 rounded">steamLoginSecure</code>, которые нужны для доступа к контактам издателей — это закрытая часть Steam, и OpenID туда не даёт доступ.
           </p>
+          <div className="border-t border-[#1c1c1c] pt-3 space-y-2">
+            <div className="flex items-center gap-2">
+              <Icon name="ShieldCheck" size={14} className="text-[#4ade80] shrink-0" />
+              <span className="font-mono text-[10px] text-[#4ade80] uppercase tracking-widest">Безопасность</span>
+            </div>
+            <p className="text-[#555] text-sm leading-relaxed">
+              Мы <span className="text-[#888]">не сохраняем, не передаём и никоим образом не используем</span> введённые вами куки. Если не доверяете — не пользуйтесь, это ваше право.
+            </p>
+            <p className="text-[#555] text-sm leading-relaxed">
+              Доступ к этой информации есть только у авторизованных пользователей Steam. Можно использовать любой аккаунт — хоть новый, лишь бы на нём была хотя бы одна игра.
+            </p>
+          </div>
         </div>
 
         {/* Header */}
