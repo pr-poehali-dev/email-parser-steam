@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Icon from '@/components/ui/icon';
 
 const BACKEND_URL = 'https://functions.poehali.dev/8af2142f-e1dd-4554-8021-8bcd21726e23';
+const VERIFY_URL = 'https://functions.poehali.dev/7411182d-31f5-4107-9851-6ffcf47619ba';
+const ACCESS_KEY = 'steam_parser_access';
 
 interface Contacts {
   emails?: string[];
@@ -32,14 +34,49 @@ const SOCIAL_ICONS: Record<string, string> = {
 };
 
 export default function Index() {
+  const [accessCode, setAccessCode] = useState('');
+  const [accessGranted, setAccessGranted] = useState(false);
+  const [accessLoading, setAccessLoading] = useState(false);
+  const [accessError, setAccessError] = useState('');
+
   const [appId, setAppId] = useState('');
   const [cookies, setCookies] = useState('');
-  const [showCookies, setShowCookies] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const [result, setResult] = useState<ParseResult | null>(null);
   const [error, setError] = useState('');
   const [copied, setCopied] = useState<string | null>(null);
   const [cookiesOpen, setCookiesOpen] = useState(false);
+
+  useEffect(() => {
+    const saved = localStorage.getItem(ACCESS_KEY);
+    if (saved) setAccessGranted(true);
+  }, []);
+
+  const handleAccessSubmit = async () => {
+    const code = accessCode.trim();
+    if (!code) { setAccessError('Введите код доступа'); return; }
+    setAccessLoading(true);
+    setAccessError('');
+    try {
+      const res = await fetch(VERIFY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code }),
+      });
+      const data = await res.json();
+      if (data.valid) {
+        localStorage.setItem(ACCESS_KEY, '1');
+        setAccessGranted(true);
+      } else {
+        setAccessError(data.error || 'Неверный код доступа');
+      }
+    } catch {
+      setAccessError('Ошибка соединения. Проверьте интернет.');
+    } finally {
+      setAccessLoading(false);
+    }
+  };
 
   const handleSearch = async () => {
     const id = appId.trim();
@@ -83,6 +120,72 @@ export default function Index() {
     (result.contacts.websites?.length ?? 0) > 0 ||
     (result.contacts.phones?.length ?? 0) > 0
   );
+
+  if (!accessGranted) {
+    return (
+      <div className="min-h-screen bg-[#0c0c0c] flex flex-col items-center justify-center px-4 relative overflow-hidden">
+        <div className="absolute inset-0 opacity-[0.025]" style={{
+          backgroundImage: 'linear-gradient(#4ade80 1px,transparent 1px),linear-gradient(90deg,#4ade80 1px,transparent 1px)',
+          backgroundSize: '48px 48px'
+        }} />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full bg-[#4ade80]/5 blur-[80px] pointer-events-none" />
+
+        <div className="relative z-10 w-full max-w-[360px]">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-xl border border-[#1c1c1c] bg-[#101010] mb-5">
+              <Icon name="Lock" size={20} className="text-[#4ade80]" />
+            </div>
+            <h1 className="text-[22px] font-light text-white tracking-tight mb-2">Доступ закрыт</h1>
+            <p className="text-[#4a4a4a] text-sm">Введите код доступа для продолжения</p>
+          </div>
+
+          <div className="rounded-xl border border-[#1c1c1c] bg-[#101010] overflow-hidden">
+            <div className="flex items-center border-b border-[#1c1c1c]">
+              <span className="pl-4 pr-2">
+                <Icon name="KeyRound" size={14} className="text-[#333]" />
+              </span>
+              <input
+                type="text"
+                value={accessCode}
+                onChange={e => { setAccessCode(e.target.value); setAccessError(''); }}
+                onKeyDown={e => e.key === 'Enter' && handleAccessSubmit()}
+                placeholder="Код доступа"
+                className="flex-1 bg-transparent py-4 pr-4 text-white font-mono text-sm outline-none placeholder:text-[#2a2a2a]"
+                autoFocus
+              />
+            </div>
+            <div className="p-3">
+              <button
+                onClick={handleAccessSubmit}
+                disabled={accessLoading}
+                className="w-full py-3 rounded-lg bg-[#4ade80] text-[#0c0c0c] font-semibold font-mono text-sm tracking-wide transition-all duration-150 hover:bg-[#22c55e] active:scale-[0.98] disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                {accessLoading ? (
+                  <span className="w-4 h-4 border-2 border-[#0c0c0c]/30 border-t-[#0c0c0c] rounded-full animate-spin" />
+                ) : (
+                  <>
+                    <Icon name="Unlock" size={14} />
+                    Войти
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {accessError && (
+            <div className="mt-3 flex items-center gap-2 px-4 py-3 rounded-lg border border-red-500/20 bg-red-500/5">
+              <Icon name="AlertCircle" size={14} className="text-red-400 shrink-0" />
+              <p className="text-red-400 text-sm">{accessError}</p>
+            </div>
+          )}
+        </div>
+
+        <div className="absolute bottom-5 font-mono text-[#1c1c1c] text-[11px] tracking-[0.2em]">
+          STEAM CONTACT PARSER
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#0c0c0c] flex flex-col items-center justify-center px-4 py-16 relative overflow-hidden">

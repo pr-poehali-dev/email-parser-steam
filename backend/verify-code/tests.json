@@ -1,0 +1,29 @@
+{
+  "tests": [
+    {
+      "name": "CORS preflight",
+      "method": "OPTIONS",
+      "path": "/",
+      "expectedStatus": 200,
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Неверный код",
+      "method": "POST",
+      "path": "/",
+      "body": {"code": "wrong-code-xyz"},
+      "expectedStatus": 200,
+      "expectedBody": {"valid": false},
+      "bodyMatcher": "partial"
+    },
+    {
+      "name": "Пустой код",
+      "method": "POST",
+      "path": "/",
+      "body": {"code": ""},
+      "expectedStatus": 400,
+      "expectedBody": {"valid": false},
+      "bodyMatcher": "partial"
+    }
+  ]
+}
