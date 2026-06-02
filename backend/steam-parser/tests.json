@@ -1,17 +1,19 @@
 {
   "tests": [
     {
-      "name": "Получить email по App ID (Dota 2 = 570)",
-      "method": "GET",
-      "path": "/?appid=570",
-      "expectedStatus": 200,
-      "expectedBody": {"app_id": "string"},
+      "name": "Ошибка — нет app_id",
+      "method": "POST",
+      "path": "/",
+      "body": {"app_id": "", "cookies": "steamLoginSecure=xxx"},
+      "expectedStatus": 400,
+      "expectedBody": {"error": "string"},
       "bodyMatcher": "partial"
     },
     {
-      "name": "Ошибка при пустом App ID",
-      "method": "GET",
-      "path": "/?appid=",
+      "name": "Ошибка — нет куки",
+      "method": "POST",
+      "path": "/",
+      "body": {"app_id": "570", "cookies": ""},
       "expectedStatus": 400,
       "expectedBody": {"error": "string"},
       "bodyMatcher": "partial"
