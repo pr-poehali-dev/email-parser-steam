@@ -98,24 +98,33 @@ def handler(event: dict, context) -> dict:
         contacts['socials'] = socials
 
     # --- Websites (non-Steam, non-social) ---
-    steam_hosts = ['steampowered.com', 'steamcommunity.com', 'steamgames.com',
-                   'valvesoftware.com', 'akamai.com', 'cloudflare', 'googleapis',
-                   'gstatic.com', 'cdn.', 'ajax.', 'jquery', 'fonts.']
+    blocked_hosts = [
+        'steampowered.com', 'steamcommunity.com', 'steamgames.com', 'steamusercontent.com',
+        'valvesoftware.com', 'akamai.com', 'akamaihd.net', 'cloudflare', 'googleapis',
+        'gstatic.com', 'cdn.', 'ajax.', 'jquery', 'fonts.', 'sentry.io',
+    ]
     social_domains = ['twitter.com', 'x.com', 'facebook.com', 'discord.gg', 'discord.com',
                       'instagram.com', 'youtube.com', 'twitch.tv', 'reddit.com',
                       'vk.com', 'tiktok.com', 'linkedin.com']
-    asset_exts = re.compile(r'\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|json|map|txt|xml)\b', re.IGNORECASE)
+    asset_exts = re.compile(
+        r'\.(js|css|png|jpg|jpeg|gif|svg|ico|woff|woff2|ttf|otf|json|map|txt|xml|webp|avif|mp4|webm|ugc)\b',
+        re.IGNORECASE
+    )
+    # Пути, характерные для медиа/ресурсов Steam (ugc, public, shared и т.д.)
+    blocked_paths = ['/ugc/', '/public/', '/shared/', '/images/', '/img/', '/static/', '/assets/']
 
     websites = set()
     for url_found in re.findall(r'https?://[^\s"\'<>]+', html):
         u = url_found.rstrip('.,;)\'"')
-        if any(h in u for h in steam_hosts):
+        if any(h in u for h in blocked_hosts):
             continue
         if any(sd in u for sd in social_domains):
             continue
         if asset_exts.search(u):
             continue
-        if len(u) > 100:
+        if any(p in u for p in blocked_paths):
+            continue
+        if len(u) > 120:
             continue
         websites.add(u)
 
