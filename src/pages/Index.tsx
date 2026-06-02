@@ -178,6 +178,14 @@ export default function Index() {
               <p className="text-red-400 text-sm">{accessError}</p>
             </div>
           )}
+
+          <div className="mt-6 flex items-start gap-2 px-4 py-3 rounded-lg border border-[#1c1c1c] bg-[#101010]">
+            <Icon name="MessageCircle" size={14} className="text-[#4ade80] shrink-0 mt-0.5" />
+            <p className="text-[#555] text-sm leading-relaxed">
+              Для получения информации и доступа к сервису обратитесь пожалуйста к владельцу сайта:{' '}
+              <a href="https://t.me/rif2310" target="_blank" rel="noopener noreferrer" className="text-[#4ade80] hover:underline">Telegram @rif2310</a>
+            </p>
+          </div>
         </div>
 
         <div className="absolute bottom-5 font-mono text-[#1c1c1c] text-[11px] tracking-[0.2em]">
