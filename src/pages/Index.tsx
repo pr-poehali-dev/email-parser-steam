@@ -38,17 +38,27 @@ const Index = () => {
 
     try {
       const res = await fetch(`${BACKEND_URL}?appid=${id}`);
-      const data = await res.json();
+      const text = await res.text();
+
+      let data: ParseResult & { error?: string };
+      try {
+        data = JSON.parse(text);
+      } catch {
+        setError('Сервер вернул неожиданный ответ. Попробуйте ещё раз.');
+        return;
+      }
 
       if (res.status === 400) {
         setError(data.error || 'Некорректный App ID');
       } else if (res.status === 404) {
         setError(data.error || 'Приложение не найдено');
+      } else if (res.status !== 200) {
+        setError(data.error || `Ошибка сервера (${res.status})`);
       } else {
         setResult(data);
       }
     } catch {
-      setError('Ошибка соединения. Попробуйте ещё раз.');
+      setError('Ошибка соединения. Проверьте интернет и попробуйте ещё раз.');
     } finally {
       setLoading(false);
     }
